@@ -38,3 +38,8 @@ abstract class SimMovable extends SimTransform
   }
 
 }
+
+class MovableSphere extends SimMovable
+{
+  
+}
