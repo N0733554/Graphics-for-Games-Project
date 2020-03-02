@@ -45,6 +45,11 @@ class SimObjectManager{
     return simObjList.get(n);
   }
   
+  void moveAll(){
+    for(SimTransform obj: simObjList){
+      obj.moveMe();
+    }
+  }
   
   void drawAll(){
     for(SimTransform obj: simObjList){
@@ -108,7 +113,7 @@ abstract class SimTransform{
   
   abstract boolean calcRayIntersection(SimRay sr);
   
-  abstract void drawMe();
+  abstract void drawMe();   
   
   ///////////////////////////////////////////////////////////////////////
   // this part of the class is the main sim transform stuff to 
@@ -119,13 +124,14 @@ abstract class SimTransform{
   PVector origin = new PVector(0, 0, 0);
 
   float scale = 1;
-  PVector translate = new PVector(0, 0, 0);
+  
+  PVector position = new PVector(0, 0, 0);
+  
   float rotateX, rotateY, rotateZ = 0.0;
-
 
   void setTransformAbs(PVector translate, float scale, float rotateX, float rotateY, float rotateZ) {
     this.scale = scale;
-    if (translate!=null) this.translate = translate.copy();
+    if (translate!=null) this.position = translate.copy();
     this.rotateX = rotateX;
     this.rotateY = rotateY;
     this.rotateZ = rotateZ;
@@ -134,7 +140,7 @@ abstract class SimTransform{
 
   void setTransformRel(PVector translate, float scale, float rotateX, float rotateY, float rotateZ) {
     this.scale *= scale;
-    if (translate!=null) this.translate.add(translate);
+    if (translate!=null) this.position.add(translate);
     this.rotateX += rotateX;
     this.rotateY += rotateY;
     this.rotateZ += rotateZ;
@@ -146,7 +152,7 @@ abstract class SimTransform{
 
   void printCurrentTransform() {
 
-    println("Current transform: Trans", translate.x, translate.y, translate.z, " Scale ", scale, " Rotxyz ", rotateX, rotateY, rotateZ);
+    println("Current transform: Trans", position.x, position.y, position.z, " Scale ", scale, " Rotxyz ", rotateX, rotateY, rotateZ);
   }
 
   // given a cardinal shape vertex p, transform the point
@@ -180,7 +186,7 @@ abstract class SimTransform{
 
     PVector rotated = new PVector(x3, y3, z3);
 
-    PVector translated = rotated.add(translate);
+    PVector translated = rotated.add(position);
     return translated;
   }
 
@@ -412,7 +418,7 @@ class SimSphere extends SimTransform{
     
     
     float r = getRadius();
-    println("shpere radius",r);
+    //println("shpere radius",r);
     
      
       PVector transCen = getCentre();
@@ -929,13 +935,13 @@ class SimModel extends SimTransform{
 
 
   SimSphere getBoundingSphere() {
-    boundingSphere.setTransformAbs(this.translate, this.scale, this.rotateX, this.rotateY, this.rotateZ);
+    boundingSphere.setTransformAbs(this.position, this.scale, this.rotateX, this.rotateY, this.rotateZ);
     boundingSphere.setID( getID() );
     return boundingSphere;
   }
 
   SimBox getBoundingBox() {
-    boundingBox.setTransformAbs(this.translate, this.scale, this.rotateX, this.rotateY, this.rotateZ);
+    boundingBox.setTransformAbs(this.position, this.scale, this.rotateX, this.rotateY, this.rotateZ);
     boundingBox.setID( getID() );
     return boundingBox;
   }
@@ -947,7 +953,7 @@ class SimModel extends SimTransform{
     cardinalModel.rotateY(this.rotateY);
     cardinalModel.rotate(this.rotateZ, 0, 0, 1); // fix for bug
 
-    cardinalModel.translate(this.translate.x, this.translate.y, this.translate.z);
+    cardinalModel.translate(this.position.x, this.position.y, this.position.z);
 
     // bounding shapes
   }
