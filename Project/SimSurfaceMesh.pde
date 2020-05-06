@@ -14,7 +14,8 @@ class SimSurfaceMesh  extends SimTransform{
 
     int numFacetsX, numFacetsZ;
 
-    PVector[] meshVertices;
+    public PVector[] meshVertices;
+    public SimTriangle[] triList;
     public int numTriangles = 0;
     // mesh coordinates are stored in this array. It is made at the start
     
@@ -113,7 +114,9 @@ class SimSurfaceMesh  extends SimTransform{
       }
       int numFacets = getNumFacets();
       beginShape(TRIANGLES);
-        
+        stroke(0);
+        fill(93, 76, 55);
+  
         // Center point
         
         for (int i = 0; i < numFacets; i++) {
@@ -130,6 +133,23 @@ class SimSurfaceMesh  extends SimTransform{
           drawTransformedVertex(t2.p3);
         }
         endShape();
+    }
+    public SimTriangle[] getTriangles()
+    {
+      SimTriangle[] triList = new SimTriangle[0];
+      
+      int numFacets = getNumFacets();
+      
+      for( int i = 0; i < numFacets; i++)
+      {
+        SimFacet f = getFacet(i);
+        SimTriangle t1 = f.tri1;
+        SimTriangle t2 = f.tri2;
+        triList = (SimTriangle[])append(triList, t1);
+        triList = (SimTriangle[])append(triList, t2);
+      }
+      
+      return triList;
     }
     
     void drawMe_Texture() {
@@ -345,10 +365,30 @@ class SimTriangle{
   
    void drawMe(){
       beginShape(TRIANGLE);
+      
       vertex(this.p1.x,this.p1.y,this.p1.z);
       vertex(this.p2.x,this.p2.y,this.p2.z);
       vertex(this.p3.x,this.p3.y,this.p3.z);
       endShape(CLOSE);
+    }
+    
+    PVector getCenter()
+    {
+      float x1 = p1.x;
+      float x2 = p2.x;
+      float x3 = p3.x;
+      float y1 = p1.y;
+      float y2 = p2.y;
+      float y3 = p3.y;
+      float z1 = p1.z;
+      float z2 = p2.z;
+      float z3 = p3.z;
+      
+      float x = (x1+x2+x3)/3;
+      float y = (y1+y2+y3)/3;
+      float z = (z1+z2+z3)/3;
+      
+      return vec(x,y,z);
     }
     
 
@@ -430,10 +470,6 @@ class SimTriangle{
     }
 }
 
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////
 // SimFacet
 // Two triangles ake a facet
@@ -441,10 +477,11 @@ class SimTriangle{
 class SimFacet{
   public SimTriangle tri1;
   public SimTriangle tri2;
+  public color col;
   
   public SimFacet(){
     tri1 = new SimTriangle();
-    tri2 = new SimTriangle();
+    tri2 = new SimTriangle();    
   }
   
   public SimFacet(PVector p1, PVector p2, PVector p3, PVector p4){

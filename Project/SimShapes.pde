@@ -336,7 +336,7 @@ class SimSphere extends SimTransform{
     PVector transCen = getCentre();
     float transRad = getRadius();
     float distP_Cen = transCen.dist(p);
-    if (distP_Cen < transRad) return true;
+    if (distP_Cen <= transRad) return true;
     return false;
   }
 
@@ -412,7 +412,6 @@ class SimSphere extends SimTransform{
     
     
     float r = getRadius();
-    println("shpere radius",r);
     
      
       PVector transCen = getCentre();
@@ -454,8 +453,7 @@ class SimBox extends SimTransform{
 
 
   PVector[] vertices;
-
-
+  
   public SimBox() {
     PVector c1 = new PVector(-1, -1, -1);
     PVector c2 = new PVector(1, 1, 1);
