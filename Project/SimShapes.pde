@@ -417,9 +417,11 @@ class SimSphere extends SimTransform{
       PVector transCen = getCentre();
       
       pushMatrix();
+      noStroke();
+      fill(200);
       translate(transCen.x, transCen.y, transCen.z);
       scale(r);
- 
+      
       shape(drawSphere);
       popMatrix();
   }

@@ -114,9 +114,7 @@ class SimSurfaceMesh  extends SimTransform{
       }
       int numFacets = getNumFacets();
       beginShape(TRIANGLES);
-        stroke(0);
-        fill(93, 76, 55);
-  
+        
         // Center point
         
         for (int i = 0; i < numFacets; i++) {

@@ -26,6 +26,8 @@ float firingHeight = 0;
 float firingAngle = 0;
 
 
+  
+
 Rect hudArea;
 
 void setup()
@@ -34,6 +36,10 @@ void setup()
   manager = new SimObjectManager();
   timer = new Timer();
   
+  // Lighting
+  ambientLight(102,102,102);
+  directionalLight(126,126,126,0,1,0);
+
   cam = new SimCamera();
   cam.setHUDArea(20,20,150,290);
   PVector camPos = vec(-terrainWidth/8,-camHeight,terrainDepth/2);
@@ -71,7 +77,11 @@ float delta;
 void draw()
 {  
   delta = timer.getElapsedTime();
-  background(0);  
+  background(128,198,229);  
+  noStroke();
+  // Lighting
+  ambientLight(102,102,102);
+  directionalLight(200,200,200,0,1,0);
   
   if(isDrawLines)
   {
@@ -87,11 +97,11 @@ void draw()
   
   ball.moveMe(delta, terrain);
   }
-  stroke(0);
-  strokeWeight(1);
-  terrain.drawMe();
-  strokeWeight(0);
   noStroke();
+  fill(93, 120, 55);  
+  terrain.drawMe();
+  stroke(200);
+  fill(200);
   ball.drawMe();
   
   drawUI();
